@@ -54,12 +54,6 @@ function flp_list_files($path) {
     include_once ABSPATH . '/wp-admin/includes/file.php';
     WP_Filesystem();
     
-    if ($wp_filesystem->exists($path)) {
-        echo '<p>Path exists</p>';
-    } else {
-        echo '<p>Path does not exist</p>';
-    }
-
     if (!file_exists($path)) {
         echo '<p>The specified path does not exist.</p>';
         return;
@@ -74,12 +68,19 @@ function flp_list_files($path) {
             <summary>Current path Stats</summary>
             <ul>
                 <li>Path: ' . esc_html($path) . '</li>
-                <li>Permissions: ' . esc_html(substr(sprintf('%o', fileperms($path)), -4)) . '</li>
+                <li> wp-exists: ' . $wp_filesystem->exists($path) . '</li>
+                <li> wp-is_readable: ' . $wp_filesystem->is_readable($path) . '</li>
+                <li> wp-is_writable: ' . $wp_filesystem->is_writable($path) . '</li>
+                <li> wp-is_file: ' . var_export($wp_filesystem->is_file($path), true) . '</li>
+                <li> wp-is_dir: ' . var_export($wp_filesystem->is_dir($path), true) . '</li>
+                <li> is_link: ' . var_export(is_link($path), true) . '</li>
+                <li>is_dir: ' . (is_dir($path) ? 'Directory' : 'File') . '</li>
+                <li>is_file: ' . (is_file($path) ? 'File' : 'Directory') . '</li>
+                <li>Permissions: ' . esc_html(var_export(fileperms($path), true)) . '</li>
                 <li>Owner: ' . esc_html(fileowner($path)) . '</li>
                 <li>Group: ' . esc_html(filegroup($path)) . '</li>
                 <li>Size: ' . esc_html(size_format($path_stats['size'])) . '</li>
-                <li>Last Updated: ' . esc_html(date("Y-m-d H:i:s", $path_stats['mtime'])) . '</li>
-                <li>Created: ' . esc_html(date("Y-m-d H:i:s", $path_stats['ctime'])) . '</li>
+                <li> Stats: ' . esc_html(var_export($path_stats, true)) . '</li>
             </ul>
           </details>';
     
