@@ -6,16 +6,6 @@
  * Author: Antonio Sejas
  */
 
-// Enqueue the custom JavaScript
-add_action('admin_enqueue_scripts', 'flp_enqueue_scripts');
-
-function flp_enqueue_scripts($hook) {
-    if ($hook != 'toplevel_page_file-listing-plugin') {
-        return;
-    }
-    wp_enqueue_script('flp-script', plugin_dir_url(__FILE__) . 'explore-file-system.js', array(), null, true);
-}
-
 // Add a menu item to the admin menu
 add_action('admin_menu', 'flp_add_admin_menu');
 
@@ -33,7 +23,7 @@ function flp_add_admin_menu() {
 
 // Display the file listing form and results
 function flp_display_file_listing() {
-    $path = isset($_GET['path']) ? sanitize_text_field($_GET['path']) : '';
+    $path = isset($_GET['path']) ? sanitize_text_field($_GET['path']) : ABSPATH . 'wp-content';
     ?>
     <div class="wrap">
         <h1>File Listing Plugin</h1>
@@ -76,8 +66,7 @@ function flp_list_files($path) {
     }
     
     $items2 = $wp_filesystem->dirlist($path);
-    ?><pre><?php var_dump($items2); ?></pre><?php
-    return;
+    ?><!--pre><?php esc_html(print_r($items2, true)); ?></pre!--><?php
 
     $items = scandir($path);
     if ($items === false) {
