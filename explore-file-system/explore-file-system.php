@@ -55,9 +55,9 @@ function flp_list_files($path) {
     WP_Filesystem();
     
     if ($wp_filesystem->exists($path)) {
-        echo '<p>File exists</p>';
+        echo '<p>Path exists</p>';
     } else {
-        echo '<p>File does not exist</p>';
+        echo '<p>Path does not exist</p>';
     }
 
     if (!file_exists($path)) {
@@ -67,6 +67,22 @@ function flp_list_files($path) {
     
     $items2 = $wp_filesystem->dirlist($path);
     ?><!--pre><?php esc_html(print_r($items2, true)); ?></pre!--><?php
+
+    // Display stats of the given path with a expandable dtails summary
+    $path_stats = stat($path);
+    echo '<details>
+            <summary>Current path Stats</summary>
+            <ul>
+                <li>Path: ' . esc_html($path) . '</li>
+                <li>Permissions: ' . esc_html(substr(sprintf('%o', fileperms($path)), -4)) . '</li>
+                <li>Owner: ' . esc_html(fileowner($path)) . '</li>
+                <li>Group: ' . esc_html(filegroup($path)) . '</li>
+                <li>Size: ' . esc_html(size_format($path_stats['size'])) . '</li>
+                <li>Last Updated: ' . esc_html(date("Y-m-d H:i:s", $path_stats['mtime'])) . '</li>
+                <li>Created: ' . esc_html(date("Y-m-d H:i:s", $path_stats['ctime'])) . '</li>
+            </ul>
+          </details>';
+    
 
     $items = scandir($path);
     if ($items === false) {
